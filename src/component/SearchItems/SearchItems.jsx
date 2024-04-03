@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 function SearchItems() {
     let searchItems = useSelector(state => state.store.searchItems);
+    
     let navigate = useNavigate();
     if (!searchItems) {
         setTimeout(() => {

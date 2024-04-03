@@ -8,7 +8,7 @@ import ProductView from "./component/productView/ProductView";
 import Header from "./component/Header/Header";
 import SearchItems from "./component/SearchItems/SearchItems";
 import Category from "./component/Category/Category";
-
+import './App.css';
 function App() {
   const dispatch = useDispatch();
   
