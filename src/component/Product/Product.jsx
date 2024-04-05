@@ -1,24 +1,21 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import CategoryMenu from '../CategoryMenu/CategoryMenu';
+import PriceFilter from '../PriceFilter/PriceFilter';
+import { FaBars } from 'react-icons/fa';
+import { RxCross2 } from 'react-icons/rx';
 
 function Product() {
     const data = useSelector(state => state.store.data);
-    const category = useSelector(state => state.store.category);
     const [minPrice, setMinPrice] = useState(0);
     const [maxPrice, setMaxPrice] = useState(2000);
     const [focusedRange, setFocusedRange] = useState(null);
     const [selectedRange, setSelectedRange] = useState(null);
+    const [isOpen, setIsOpen] = useState(false);
+    const [isAnimating, setIsAnimating] = useState(false);
 
-    const price = [
-        { min: 0, max: 100 },
-        { min: 100, max: 300 },
-        { min: 300, max: 500 },
-        { min: 500, max: 1000 },
-        { min: 1000, max: 2000 },
-    ];
     const filteredData = data.filter((item) => item.price > minPrice && item.price <= maxPrice);
-    console.log(filteredData);
 
     const handleClick = (min, max) => {
         setMinPrice(min);
@@ -33,50 +30,55 @@ function Product() {
     const handleBlur = () => {
         setFocusedRange(null);
     };
+
+    const toggleMenu = () => {
+        setIsAnimating(true);
+        setIsOpen(!isOpen);
+    };
+
+    const closeMenu = () => {
+        setIsAnimating(true);
+        setIsOpen(false);
+    };
     return (
-        <div className="container">
+        <div className="container lg:p-0 ">
+            <div className=' block lg:flex gap-20 justify-between'>
+                {/* offCanvas Button */}
+                <div className="flex justify-center  pt-5 pb-0 w-full lg:hidden">
+                    <button onClick={toggleMenu} className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-md text-sm md:text-base lg:text-md">
+                        Category And Price-Filter
+                    </button>
+                </div>
 
-            <div className='flex'>
+                {/* Off-canvas Menu */}
+            <div className={`${isOpen ? 'translate-x-0' : 'translate-x-full'} shadow-2xl w-80 fixed inset-y-0 right-0 z-20 bg-white lg:hidden transition-transform duration-300 ${isAnimating ? 'ease-out' : 'ease-in'}`} >
+                <div className="h-full overflow-y-auto">
+                    <nav className="p-4">
+                        <div className="flex justify-end mb-4">
+                            <button onClick={closeMenu} className="text-black hover:text-gray-900 focus:outline-none">
+                                <RxCross2 className="h-6 w-6 fill-current" />
+                            </button>
+                        </div>
+                        <PriceFilter handleClick={handleClick} handleFocus={handleFocus} handleBlur={handleBlur} focusedRange={focusedRange} selectedRange={selectedRange} />
+                        <CategoryMenu />
+                    </nav>
+                </div>
+            </div>
 
-                {/* Category Section */}
-                <section className='text-gray-600 body-font w-2/12 cursor-pointer hidden lg:block  '>
-                    <div className='fixed w-2/12 h-full top-0 overflow-y-scroll menuBar' >
-                        <div className="px-5 pt-20 pb-4 mx-auto">
-                            <h2 className='text-lg font-bold text-black '>Price Filter</h2>
-                            <div className='px-1 mx-auto'>
-                                <div onClick={() => handleClick(0, 2000)} onFocus={() => handleFocus(0, 2000)} onBlur={handleBlur} tabIndex="0" className={`flex my-[2px] rounded-sm justify-center items-center text-black group font-bold hover:shadow-xl px-2 py-1 duration-300 ${focusedRange === '0-2000' || selectedRange === '0-2000' ? 'bg-purple-200 text-purple-800' : '' }`} >
-                                    <h3 className='duration-200 text-xs md:text-sm  lg:text-base group-hover:text-purple-800'>ALL Products</h3>
-                                </div>
-                                {price.map((ele, ind) => {
-                                    const rangeKey = `${ele.min}-${ele.max}`;
-                                    return (
-                                        <div key={ind} onClick={() => handleClick(ele.min, ele.max)} onFocus={() => handleFocus(ele.min, ele.max)} onBlur={handleBlur} tabIndex="0" className={`flex items-center my-[2px] rounded-sm text-gray-500 hover:text-black group font-bold hover:shadow-xl px-2 py-1 group duration-300 ${focusedRange === rangeKey || selectedRange === rangeKey ? 'bg-purple-200 text-purple-800' : '' }`} >
-                                            <h3 className='duration-200 text-xs md:text-sm lg:text-base w-1/3'>$ {ele.min}</h3>
-                                            <h3 className='duration-200 text-xs md:text-sm lg:text-base w-1/3 group-hover:text-purple-800'>to</h3>
-                                            <h3 className='duration-200 text-xs md:text-sm lg:text-base w-1/3'>{ele.max === 2000 ? 'Max' : '$ ' + ele.max}</h3>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                        <div className="px-6 mx-auto">
-                            <h2 className='text-lg font-bold text-black '>Category </h2>
-                            <ul>
-                                {category && category.map((ele, ind) => (
-                                    <li key={ind} className=' text-gray-500 hover:text-black group font-bold hover:shadow-xl px-2 py-1 group duration-300'>
-                                        <Link to={`/category/${ele}`}>{ele}</Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+
+                {/* Category & Price Filter Section */}
+                <section className='text-gray-600 body-font w-3/12  xl:w-2/12 cursor-pointer hidden lg:block'>
+                    <div className='fixed w-3/12 xl:w-2/12 h-full top-0 overflow-y-scroll menuBar'>
+                        <PriceFilter handleClick={handleClick} handleFocus={handleFocus} handleBlur={handleBlur} focusedRange={focusedRange} selectedRange={selectedRange} />
+                        <CategoryMenu />
                     </div>
                 </section>
                 {/* Product Section */}
                 <section className="text-gray-600 body-font w-full lg:w-10/12">
-                    <div className="px-5 sticky top-[100px] py-10 mx-auto">
+                    <div className="px-5  py-5 mx-auto">
                         <div className="flex flex-wrap justify-center">
                             {filteredData.map((ele, ind) => (
-                                <div className="w-full sm:w-1/2 lg:w-4/12 xl:w-1/4 2xl:w-3/12 my-5 p-4" key={ind}>
+                                <div className="w-full sm:w-1/2  xl:w-4/12 2xl:w-3/12 my-5 p-4" key={ind}>
                                     <Link to={`/item/${ele.id}`} className="block bg-white rounded-md overflow-hidden shadow-xl">
                                         <div className="relative h-48 overflow-hidden">
                                             <img alt={ele.title} className="object-cover object-center w-full h-full hover:scale-105 duration-300" src={ele.thumbnail} />
@@ -92,7 +94,7 @@ function Product() {
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                                         </svg>
                                                     </span>
-                                                    <span className="pl-3 pr-4 py-1 text-xs md:text-sm 2xl:text-base">Add To Cart</span>
+                                                    <span className="pl-3 pr-4 py-1 text-xs md:text-sm 2xl:text-base">Add to Wishlist</span>
                                                 </button>
                                             </div>
                                         </div>
@@ -104,7 +106,6 @@ function Product() {
                 </section>
             </div>
         </div>
-
     );
 }
 
