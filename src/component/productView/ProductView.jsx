@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FaStar, FaRegHeart } from "react-icons/fa";
 import { useNavigate, useParams } from 'react-router-dom';
-import { AddToCart } from '../reduxApp/storeSlice';
+import { AddToCart, AddToList } from '../reduxApp/storeSlice';
 function ProductView() {
+    let wishList = useSelector(state => state.store.wishList);
     let data = useSelector(state => state.store.data);
     let cart = useSelector(state => state.store.cart);
     let [image, setImage] = useState();
     let [addedItems, setAddedItems] = useState(null);
+    let [AddedWishList, SetAddedWishList] = useState(null);
     let dispatch = useDispatch();
     let params = useParams();
     let navigate = useNavigate();
@@ -25,7 +27,20 @@ function ProductView() {
         setAddedItems(matchedItem || null);
     }, [cart, params.id]);
 
+    useEffect(() => {
+        const MatchedList = wishList.find((ele) => {
+            return ele.id === parseInt(params.id);
+        });
+        SetAddedWishList(MatchedList || null);
+    }, [wishList, params.id]);
 
+    const handleClick = (ele) => {
+        if (AddedWishList) {
+            navigate('/wishList');
+        } else {
+            dispatch(AddToList(ele, ((ele.price) - (ele.price * ele.discountPercentage / 100))));
+        }
+    }
     return (
         <div>
             {data && data.map((ele, ind) => {
@@ -87,12 +102,12 @@ function ProductView() {
                                                     </button>
                                                     {/* --------------------------------------- */}
 
-                                                    <button className="group flex items-center justify-start w-10 h-10 bg-red-600 rounded-full cursor-pointer relative overflow-hidden transition-all duration-200 shadow-lg hover:w-36 md:hover:w-42 xl:hover:w-48 ">
+                                                    <button onClick={() => { handleClick(ele) }} className="group flex items-center justify-start w-10 h-10 bg-red-600 rounded-full cursor-pointer relative overflow-hidden transition-all duration-200 shadow-lg hover:w-36 md:hover:w-42 xl:hover:w-48 ">
                                                         <div className="flex items-center justify-center w-full transition-all duration-300 group-hover:justify-start group-hover:px-3">
                                                             <FaRegHeart className='text-white font-bolder' />
                                                         </div>
                                                         <div className="absolute right-5 transform translate-x-full opacity-0 text-white text-xs md:text-md xl:text-lg font-semibold transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
-                                                            Add To Wishlist
+                                                            {AddedWishList ? "Go To WishList" : "Add To Wishlist"}
                                                         </div>
                                                     </button>
 

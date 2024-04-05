@@ -5,6 +5,7 @@ const initialState = {
     searchItems: [],
     category: [],
     cart: [],
+    wishList : [],
 }
 
 export const storeSlice = createSlice({
@@ -45,8 +46,19 @@ export const storeSlice = createSlice({
                 item.quantity = action.payload.quantity
             }
         },
+        AddToList: (state, action) => {
+            const existingItem = state.wishList.find(c => c.id === action.payload.id);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                state.wishList.push({ ...action.payload, quantity: 1 });
+            }
+        },
+        removeFromList: (state, action) => {
+            state.wishList = state.wishList.filter(item => item.id !== action.payload.id)
+        }
     },
 })
 
-export const { addData, SearchData, addCategory, removeFromCart, AddToCart, updateQuantity } = storeSlice.actions
+export const { AddToList,removeFromList,addData, SearchData, addCategory, removeFromCart, AddToCart, updateQuantity } = storeSlice.actions
 export default storeSlice.reducer

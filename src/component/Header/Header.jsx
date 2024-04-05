@@ -6,7 +6,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { SearchData } from '../reduxApp/storeSlice';
 
 const Header = () => {
-    let cart = useSelector(state=> state.store.cart);
+    let wishList = useSelector(state => state.store.wishList);
+    let cart = useSelector(state => state.store.cart);
     const [isOpen, setIsOpen] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
     const [searchValue, setSearchValue] = useState('');
@@ -39,11 +40,10 @@ const Header = () => {
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
             search();
-        closeMenu();
-
+            closeMenu();
         }
     };
-    
+
     let search = () => {
         if (searchValue) {
             dispatch(SearchData(searchValue))
@@ -54,21 +54,21 @@ const Header = () => {
         }
         closeMenu();
     }
-    const logoClick = ()=>{
+    const logoClick = () => {
         navigate('/');
         window.location.reload();
     }
     let HeaderData = [
-        { id: 1, name: 'Home', link: '/' }, { id: 2, name: 'Wishlist', link: '/wishlist' }, { id: 3, name: 'Cart', link: '/cart',cnt: cart.length }];
+        { id: 1, name: 'Home', link: '/' }, { id: 2, name: 'Wishlist', link: '/wishlist',cnt: wishList.length }, { id: 3, name: 'Cart', link: '/cart', cnt: cart.length }];
 
     return (
         <header className="bg-white text-black py-4 shadow-xl sticky top-0 z-10">
             <div className="container mx-auto px-4 flex items-center justify-between">
                 {/* Logo */}
                 <div className="font-bold text-xl md:text-2xl lg:text-3xl">
-                    <button onClick={()=>{logoClick()}}>My Logo</button>
+                    <button onClick={() => { logoClick() }}>My Logo</button>
                 </div>
-                
+
                 {/* Navigation */}
                 <nav className="hidden lg:flex gap-5 items-center">
                     <div className="flex items-center">
@@ -111,7 +111,7 @@ const Header = () => {
                             {HeaderData.map((ele, ind) => {
                                 return (
                                     <li key={ind}>
-                                        <Link to={ele.link} className="hover:text-gray-700" onClick={()=>{toggleMenu()}}>{ele.name} {ele.cnt}</Link>
+                                        <Link to={ele.link} className="hover:text-gray-700" onClick={() => { toggleMenu() }}>{ele.name} {ele.cnt}</Link>
                                     </li>
                                 )
                             })}

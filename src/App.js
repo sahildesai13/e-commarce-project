@@ -10,6 +10,7 @@ import SearchItems from "./component/SearchItems/SearchItems";
 import Category from "./component/Category/Category";
 import './App.css';
 import CartView from "./component/CartView/CartView";
+import ShowWishList from "./component/ShowWishList/ShowWishList";
 function App() {
   const dispatch = useDispatch();
   
@@ -42,6 +43,7 @@ function App() {
         <Route path="/item/:id" element={ <ProductView/> } />
         <Route path="/Search" element={<SearchItems/>} />
         <Route path="/cart" element={<CartView/>} />
+        <Route path="/WishList" element={<ShowWishList/>} />
         <Route path="/category/:id" element={<Category/>} />
       </Routes>
     </div>

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import CategoryMenu from '../CategoryMenu/CategoryMenu';
 import PriceFilter from '../PriceFilter/PriceFilter';
-import { FaBars } from 'react-icons/fa';
 import { RxCross2 } from 'react-icons/rx';
+import { AddToList } from '../reduxApp/storeSlice';
 
 function Product() {
     const data = useSelector(state => state.store.data);
@@ -14,7 +14,7 @@ function Product() {
     const [selectedRange, setSelectedRange] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
-
+    const dispatch = useDispatch();
     const filteredData = data.filter((item) => item.price > minPrice && item.price <= maxPrice);
 
     const handleClick = (min, max) => {
@@ -40,6 +40,11 @@ function Product() {
         setIsAnimating(true);
         setIsOpen(false);
     };
+
+    const handleList = (ele) => {
+        alert(`${ele.title} is Added To List`);
+        dispatch(AddToList(ele, ((ele.price) - (ele.price * ele.discountPercentage / 100))));
+    }
     return (
         <div className="container lg:p-0 ">
             <div className=' block lg:flex gap-20 justify-between'>
@@ -51,19 +56,19 @@ function Product() {
                 </div>
 
                 {/* Off-canvas Menu */}
-            <div className={`${isOpen ? 'translate-x-0' : 'translate-x-full'} shadow-2xl w-80 fixed inset-y-0 right-0 z-20 bg-white lg:hidden transition-transform duration-300 ${isAnimating ? 'ease-out' : 'ease-in'}`} >
-                <div className="h-full overflow-y-auto">
-                    <nav className="p-4">
-                        <div className="flex justify-end mb-4">
-                            <button onClick={closeMenu} className="text-black hover:text-gray-900 focus:outline-none">
-                                <RxCross2 className="h-6 w-6 fill-current" />
-                            </button>
-                        </div>
-                        <PriceFilter handleClick={handleClick} handleFocus={handleFocus} handleBlur={handleBlur} focusedRange={focusedRange} selectedRange={selectedRange} />
-                        <CategoryMenu />
-                    </nav>
+                <div className={`${isOpen ? 'translate-x-0' : 'translate-x-full'} shadow-2xl w-80 fixed inset-y-0 right-0 z-20 bg-white lg:hidden transition-transform duration-300 ${isAnimating ? 'ease-out' : 'ease-in'}`} >
+                    <div className="h-full overflow-y-auto">
+                        <nav className="p-4">
+                            <div className="flex justify-end mb-4">
+                                <button onClick={closeMenu} className="text-black hover:text-gray-900 focus:outline-none">
+                                    <RxCross2 className="h-6 w-6 fill-current" />
+                                </button>
+                            </div>
+                            <PriceFilter handleClick={handleClick} handleFocus={handleFocus} handleBlur={handleBlur} focusedRange={focusedRange} selectedRange={selectedRange} />
+                            <CategoryMenu />
+                        </nav>
+                    </div>
                 </div>
-            </div>
 
 
                 {/* Category & Price Filter Section */}
@@ -83,22 +88,22 @@ function Product() {
                                         <div className="relative h-48 overflow-hidden">
                                             <img alt={ele.title} className="object-cover object-center w-full h-full hover:scale-105 duration-300" src={ele.thumbnail} />
                                         </div>
-                                        <div className="p-4">
-                                            <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1 uppercase xl:text-md ">{ele.category}</h3>
-                                            <h2 className="text-gray-900 title-font text-sm font-medium mb-2 line-clamp-2 w-full overflow-hidden whitespace-nowrap md:text-base xl:text-lg">{ele.title}</h2>
-                                            <div className='flex justify-between items-center mt-4'>
-                                                <p className="mt-1 text-gray-900 font-normal text-sm md:text-base">${ele.price}</p>
-                                                <button className="overflow-hidden flex items-center text-white bg-gray-900 rounded group">
-                                                    <span className="px-3 py-2 text-white bg-purple-600 transition-colors duration-300 group-hover:bg-green-700 flex items-center justify-center">
-                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                                                        </svg>
-                                                    </span>
-                                                    <span className="pl-3 pr-4 py-1 text-xs md:text-sm 2xl:text-base">Add to Wishlist</span>
-                                                </button>
-                                            </div>
-                                        </div>
                                     </Link>
+                                    <div className="p-4">
+                                        <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1 uppercase xl:text-md ">{ele.category}</h3>
+                                        <h2 className="text-gray-900 title-font text-sm font-medium mb-2 line-clamp-2 w-full overflow-hidden whitespace-nowrap md:text-base xl:text-lg">{ele.title}</h2>
+                                        <div className='flex justify-between items-center mt-4'>
+                                            <p className="mt-1 text-gray-900 font-normal text-sm md:text-base">${ele.price}</p>
+                                            <button className="overflow-hidden flex items-center text-white bg-gray-900 rounded group">
+                                                <span className="px-3 py-2 text-white bg-purple-600 transition-colors duration-300 group-hover:bg-green-700 flex items-center justify-center">
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                                    </svg>
+                                                </span>
+                                                <span onClick={() => { handleList(ele) }} className="pl-3 pr-4 py-1 text-xs md:text-sm ">Add to Wishlist</span>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             ))}
                         </div>

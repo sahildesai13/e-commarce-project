@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { removeFromCart, updateQuantity } from '../reduxApp/storeSlice'
 import { MdDeleteOutline } from "react-icons/md";
 function CartView() {
-    const cart = useSelector(state => state.store.cart)
+    const cart = useSelector(state => state.store.cart);
+    console.log(cart);
     const dispatch = useDispatch()
 
     const handleRemoveFromCart = (item) => {
