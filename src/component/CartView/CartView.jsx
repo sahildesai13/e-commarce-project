@@ -59,8 +59,6 @@ function CartView() {
                                         <p className='text-gray-600 mt-5 lg:mt-10'>Total: ${Math.trunc(item.dicountPrice) * item.quantity}</p>
                                     </div>
                                 </div>
-
-
                             </div>
                         ))}
                     </div>

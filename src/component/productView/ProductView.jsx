@@ -7,19 +7,19 @@ function ProductView() {
     let data = useSelector(state => state.store.data);
     let cart = useSelector(state => state.store.cart);
     let [image, setImage] = useState();
-    let [addedItems,setAddedItems] = useState(null);
+    let [addedItems, setAddedItems] = useState(null);
     let dispatch = useDispatch();
     let params = useParams();
     let navigate = useNavigate();
     let handleCart = (ele, price) => {
-        if(addedItems){
+        if (addedItems) {
             navigate('/cart');
-        }else{
+        } else {
             dispatch(AddToCart({ ...ele, dicountPrice: price }));
         }
     }
     useEffect(() => {
-        const matchedItem = cart.find((ele)=>{
+        const matchedItem = cart.find((ele) => {
             return ele.id === parseInt(params.id);
         });
         setAddedItems(matchedItem || null);
@@ -77,7 +77,7 @@ function ProductView() {
                                                 </div>
                                                 <div className='flex justify-center gap-5 mt-5 md:mt-5'>
                                                     <button onClick={() => { handleCart(ele, ((ele.price) - (ele.price * ele.discountPercentage / 100))) }} className=" relative w-36 hover:w-28 md:hover:w-40  duration-300 xl:w-48  md:w-46 h-10 cursor-pointer flex text-center rounded-3xl items-center border overflow-hidden border-purple-500 bg-purple-500 group hover:bg-purple-700 active:bg-purple-700 active:border-purple-700">
-                                                        <span className="text-gray-200 text-xs xl:text-sm font-semibold mx-auto ml-8 transform group-hover:translate-x-20 transition-all duration-300">{addedItems? "Go to Cart" : 'Add To Cart'}</span>
+                                                        <span className="text-gray-200 text-xs xl:text-sm font-semibold mx-auto ml-8 transform group-hover:translate-x-20 transition-all duration-300">{addedItems ? "Go to Cart" : 'Add To Cart'}</span>
                                                         <span className="absolute right-0 h-full w-10 rounded-3xl bg-purple-500 hover:bg-purple-700 flex items-center justify-center transform group-hover:translate-x-0 group-hover:w-full transition-all duration-300">
                                                             <svg className="svg w-8 font-bolder text-white" fill="none" height={24} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24" width={24} xmlns="http://www.w3.org/2000/svg">
                                                                 <line x1={12} x2={12} y1={5} y2={19} />
@@ -107,7 +107,6 @@ function ProductView() {
                     )
                 }
             })}
-
         </div>
     )
 }
