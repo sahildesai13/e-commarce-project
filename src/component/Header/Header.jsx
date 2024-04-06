@@ -56,7 +56,6 @@ const Header = () => {
     }
     const logoClick = () => {
         navigate('/');
-        window.location.reload();
     }
     let HeaderData = [
         { id: 1, name: 'Home', link: '/' }, { id: 2, name: 'Wishlist', link: '/wishlist',cnt: wishList.length }, { id: 3, name: 'Cart', link: '/cart', cnt: cart.length }];
